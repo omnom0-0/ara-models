@@ -129,8 +129,47 @@ deploy_netlify() {
 
     cd frontend
 
-    echo "🚀 Deploying..."
-    netlify deploy --prod
+    echo "🚀 Deploying (this may take a minute)..."
+    DEPLOY_OUTPUT=$(netlify deploy --prod --json 2>&1)
+    DEPLOY_STATUS=$?
+
+    if [ $DEPLOY_STATUS -ne 0 ]; then
+        echo "$DEPLOY_OUTPUT"
+        echo -e "${RED}✗${NC} Netlify deployment failed"
+        cd ..
+        exit 1
+    fi
+
+    echo "$DEPLOY_OUTPUT"
+
+    LIVE_URL=$(printf '%s\n' "$DEPLOY_OUTPUT" | python3 - <<'PYTHON'
+import json
+import sys
+
+for raw_line in sys.stdin:
+    line = raw_line.strip()
+    if not line:
+        continue
+    try:
+        payload = json.loads(line)
+    except json.JSONDecodeError:
+        continue
+    if isinstance(payload, dict):
+        url = payload.get("url") or payload.get("deploy_url") or ""
+        if url:
+            print(url)
+            break
+else:
+    print("")
+PYTHON
+)
+
+    if [ -n "$LIVE_URL" ]; then
+        echo "🌍 Live URL: $LIVE_URL"
+    else
+        echo -e "${YELLOW}⚠${NC}  Could not automatically detect deploy URL."
+        echo "Check the Netlify CLI output above for the public link."
+    fi
 
     echo -e "${GREEN}✓${NC} Frontend deployed to Netlify"
     cd ..
@@ -186,7 +225,7 @@ main() {
     echo ""
     echo "Next steps:"
     echo "1. Test backend: curl https://ara-radar-backend.fly.dev/health"
-    echo "2. Visit frontend: Check Netlify dashboard for URL"
+    echo "2. Visit frontend: Use the Live URL above or check the Netlify dashboard"
     echo "3. Test ingest: Go to /ingest and upload data"
     echo "4. Monitor: fly logs (backend) & Netlify logs (frontend)"
 }

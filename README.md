@@ -116,6 +116,16 @@ npm run dev
 
 Visit http://localhost:8888
 
+#### Preview the production bundle
+
+To confirm the pinned React 18.2 runtime behaves correctly before deploying, run the bundled preview locally:
+
+```bash
+npm run preview
+```
+
+This command builds the production assets and boots the same server you will deploy, allowing you to verify there are no `ReactCurrentBatchConfig` runtime errors.
+
 ### Environment Variables
 
 Backend `.env`:
