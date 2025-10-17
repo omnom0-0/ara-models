@@ -47,8 +47,15 @@ NEXT_PUBLIC_BACKEND_URL=https://ara-radar-backend.fly.dev
 NEXT_PUBLIC_SUPABASE_URL=https://wxddgrcnjesgumfztcdi.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4ZGRncmNuamVzZ3VtZnp0Y2RpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1OTA1NTQsImV4cCI6MjA3NjE2NjU1NH0.VhrJ5h7RNZNyWQS3E1fa4Rn0rvs17XAlNGAugWly2o0
 
-# Deploy
-netlify deploy --prod
+# If the previous deploy failed with an integrity checksum error, clear the cache first
+rm -rf ~/.npm
+npm cache clean --force
+
+# Deploy (prints JSON with the public URL)
+netlify deploy --prod --json
+
+# Or run the helper to build + deploy + print the link
+../deploy.sh  # choose option 4
 ```
 
 ### Option 2: Deploy to Render
@@ -74,7 +81,7 @@ netlify deploy --prod
 2. Connect your GitHub repository
 3. Build settings:
    - Base directory: `frontend`
-   - Build command: `npm install && npm run build`
+   - Build command: `npm ci && npm run build`
    - Publish directory: `frontend/.next`
 4. Environment variables:
    ```
@@ -100,7 +107,7 @@ Test: http://localhost:8000/health
 ### Frontend
 ```bash
 cd frontend
-npm install
+npm ci
 npm run build
 npm start
 ```
@@ -128,8 +135,8 @@ Test: http://localhost:8888
 ### Frontend Issues
 
 **Build fails**
-- Delete `node_modules` and `.next`
-- Run `npm install` again
+- Delete `node_modules`, `.next`, and `~/.npm`
+- Run `npm ci` again
 - Check all path aliases in tsconfig.json
 
 **API calls fail**

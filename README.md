@@ -78,7 +78,7 @@ Backend will auto-fetch the latest model bundle from GitHub Releases.
 1. Push code to GitHub
 2. Connect repository to Netlify
 3. Configure build settings:
-   - Build command: `cd frontend && npm install && npm run build`
+   - Build command: `cd frontend && npm ci && npm run build`
    - Publish directory: `frontend/.next`
 4. Set environment variable:
    ```
@@ -110,11 +110,30 @@ uvicorn app:app --reload --port 8000
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
 Visit http://localhost:8888
+
+#### Preview the production bundle
+
+To confirm the pinned React 18.2 runtime behaves correctly before deploying, run the bundled preview locally:
+
+```bash
+npm run preview
+```
+
+This command builds the production assets and boots the same server you will deploy, allowing you to verify there are no `ReactCurrentBatchConfig` runtime errors.
+
+If a Netlify build fails with an `integrity checksum` error for `react-dom@18.2.0`, clear the cached artifacts before redeploying:
+
+```bash
+rm -rf ~/.npm
+npm cache clean --force
+```
+
+Then retry the deployment (`netlify deploy --prod --json` or the hosted pipeline). The project is pinned to React 18.2.0, so a clean cache guarantees the lockfile checksum matches what Netlify installs.
 
 ### Environment Variables
 

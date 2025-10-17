@@ -5,12 +5,13 @@
     "dev": "next dev -p 8888",
     "build": "next build",
     "start": "next start -p 8888",
+    "preview": "next build && next start -p 8888",
     "test:e2e": "playwright test"
   },
   "dependencies": {
     "next": "14.2.8",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-tabs": "^1.0.4",
