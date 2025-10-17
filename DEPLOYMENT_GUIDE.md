@@ -47,8 +47,11 @@ NEXT_PUBLIC_BACKEND_URL=https://ara-radar-backend.fly.dev
 NEXT_PUBLIC_SUPABASE_URL=https://wxddgrcnjesgumfztcdi.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4ZGRncmNuamVzZ3VtZnp0Y2RpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1OTA1NTQsImV4cCI6MjA3NjE2NjU1NH0.VhrJ5h7RNZNyWQS3E1fa4Rn0rvs17XAlNGAugWly2o0
 
-# Deploy
-netlify deploy --prod
+# Deploy (prints JSON with the public URL)
+netlify deploy --prod --json
+
+# Or run the helper to build + deploy + print the link
+../deploy.sh  # choose option 4
 ```
 
 ### Option 2: Deploy to Render
